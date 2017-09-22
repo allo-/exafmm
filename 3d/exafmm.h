@@ -24,6 +24,13 @@ namespace exafmm {
     real_t q;                                   //!< Charge
     real_t p;                                   //!< Potential
     vec3 F;                                     //!< Force
+#ifdef EXAFMM_INDEXED_BODIES
+    size_t index;                               //!< Index of the particle
+    //! Total order by index of the bodies
+    bool operator<(const Body & other) {
+      return index < other.index;
+    };
+#endif
   };
   typedef std::vector<Body> Bodies;             //!< Vector of bodies
 

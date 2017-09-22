@@ -32,6 +32,9 @@ namespace exafmm {
         for (int i=begin; i<end; i++) {
           buffer[i].X = bodies[i].X;
           buffer[i].q = bodies[i].q;
+#ifdef EXAFMM_INDEXED_BODIES
+		  buffer[i].index = bodies[i].index;
+#endif
         }
       }
       return;
@@ -59,6 +62,9 @@ namespace exafmm {
       int octant = (x[0] > X[0]) + ((x[1] > X[1]) << 1) + ((x[2] > X[2]) << 2);
       buffer[counter[octant]].X = bodies[i].X;
       buffer[counter[octant]].q = bodies[i].q;
+#ifdef EXAFMM_INDEXED_BODIES
+	  buffer[counter[octant]].index = bodies[i].index;
+#endif
       counter[octant]++;
     }
     //! Loop over children and recurse
