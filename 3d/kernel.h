@@ -1,9 +1,13 @@
 #ifndef kernel_h
 #define kernel_h
 #include "exafmm.h"
+#include <vector>
 
 namespace exafmm {
   const complex_t I(0.,1.);
+  static vector<complex_t> Ynm;
+  static vector<complex_t> Ynm2;
+  static vector<complex_t> YnmTheta;
 
   inline int oddOrEven(int n) {
     return (((n) & 1) == 1) ? -1 : 1;
@@ -30,7 +34,7 @@ namespace exafmm {
       - std::sin(theta) / r * spherical[1];
   }
 
-  void evalMultipole(real_t rho, real_t alpha, real_t beta, complex_t * Ynm, complex_t * YnmTheta) {
+  void evalMultipole(real_t rho, real_t alpha, real_t beta, vector<complex_t> & Ynm, vector<complex_t> & YnmTheta) {
     real_t x = std::cos(alpha);
     real_t y = std::sin(alpha);
     real_t invY = y == 0 ? 0 : 1 / y;
@@ -69,7 +73,7 @@ namespace exafmm {
     }
   }
 
-  void evalLocal(real_t rho, real_t alpha, real_t beta, complex_t * Ynm) {
+  void evalLocal(real_t rho, real_t alpha, real_t beta, vector<complex_t> & Ynm) {
     real_t x = std::cos(alpha);
     real_t y = std::sin(alpha);
     real_t fact = 1;
@@ -106,6 +110,9 @@ namespace exafmm {
 
   void initKernel() {
     NTERM = P * (P + 1) / 2;
+	Ynm.resize(P*P);
+	Ynm2.resize(4*P*P);
+	YnmTheta.resize(P*P);
   }
 
   void P2P(Cell * Ci, Cell * Cj) {
@@ -130,7 +137,6 @@ namespace exafmm {
   }
 
   void P2M(Cell * C) {
-    complex_t Ynm[P*P], YnmTheta[P*P];
     for (Body * B=C->body; B!=C->body+C->numBodies; B++) {
       vec3 dX = B->X - C->X;
       real_t rho, alpha, beta;
@@ -147,7 +153,6 @@ namespace exafmm {
   }
 
   void M2M(Cell * Ci) {
-    complex_t Ynm[P*P], YnmTheta[P*P];
     for (Cell * Cj=Ci->child; Cj!=Ci->child+Ci->numChilds; Cj++) {
       vec3 dX = Ci->X - Cj->X;
       real_t rho, alpha, beta;
@@ -176,7 +181,6 @@ namespace exafmm {
   }
 
   void M2L(Cell * Ci, Cell * Cj) {
-    complex_t Ynm2[4*P*P];
     vec3 dX = Ci->X - Cj->X;
     real_t rho, alpha, beta;
     cart2sph(dX, rho, alpha, beta);
@@ -205,7 +209,6 @@ namespace exafmm {
   }
 
   void L2L(Cell * Cj) {
-    complex_t Ynm[P*P], YnmTheta[P*P];
     for (Cell * Ci=Cj->child; Ci!=Cj->child+Cj->numChilds; Ci++) {
       vec3 dX = Ci->X - Cj->X;
       real_t rho, alpha, beta;
@@ -236,7 +239,6 @@ namespace exafmm {
   }
 
   void L2P(Cell * Ci) {
-    complex_t Ynm[P*P], YnmTheta[P*P];
     for (Body * B=Ci->body; B!=Ci->body+Ci->numBodies; B++) {
       vec3 dX = B->X - Ci->X;
       vec3 spherical = 0;
