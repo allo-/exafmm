@@ -5,9 +5,9 @@
 
 namespace exafmm {
   const complex_t I(0.,1.);
-  static vector<complex_t> Ynm;
-  static vector<complex_t> Ynm2;
-  static vector<complex_t> YnmTheta;
+  static std::vector<complex_t> Ynm;
+  static std::vector<complex_t> Ynm2;
+  static std::vector<complex_t> YnmTheta;
 
   inline int oddOrEven(int n) {
     return (((n) & 1) == 1) ? -1 : 1;
@@ -34,7 +34,7 @@ namespace exafmm {
       - std::sin(theta) / r * spherical[1];
   }
 
-  void evalMultipole(real_t rho, real_t alpha, real_t beta, vector<complex_t> & Ynm, vector<complex_t> & YnmTheta) {
+  void evalMultipole(real_t rho, real_t alpha, real_t beta, std::vector<complex_t> & Ynm, std::vector<complex_t> & YnmTheta) {
     real_t x = std::cos(alpha);
     real_t y = std::sin(alpha);
     real_t invY = y == 0 ? 0 : 1 / y;
@@ -73,7 +73,7 @@ namespace exafmm {
     }
   }
 
-  void evalLocal(real_t rho, real_t alpha, real_t beta, vector<complex_t> & Ynm) {
+  void evalLocal(real_t rho, real_t alpha, real_t beta, std::vector<complex_t> & Ynm) {
     real_t x = std::cos(alpha);
     real_t y = std::sin(alpha);
     real_t fact = 1;
